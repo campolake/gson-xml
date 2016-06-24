@@ -115,7 +115,7 @@ import static com.google.gson.stream.JsonScope.NONEMPTY_OBJECT;
  *   public void writeDoublesArray(JsonWriter writer, List<Double> doubles) throws IOException {
  *     writer.beginArray();
  *     for (Double value : doubles) {
- *       writer.value(value);
+ *       writer.value(value);e
  *     }
  *     writer.endArray();
  *   }}</pre>
