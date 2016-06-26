@@ -19,26 +19,38 @@ public class TypeAdapter {
         return result;
     }
 
-    private 
+    private String name;
 
-    public  TypeAdapter()
-    {
-
+    public String getName() {
+        return name;
     }
 
-    public void reflectClass(Object object) throws IllegalAccessException {
-        Class c = object.getClass();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public  TypeAdapter(Object src) throws IllegalAccessException {
+        name  =  src.getClass().getSimpleName();
+        getFields(src);
+    }
+
+
+
+    public Map<String,BoundField> getFields(Object obj) throws IllegalAccessException {
+        Map<String,BoundField> innerResult = new LinkedHashMap<String,BoundField>();
+        Class c = obj.getClass();
         Field[] fields = c.getDeclaredFields();
         for(Field f: fields)
         {
             Type filedType  = f.getType();
             Annotation[] as = f.getAnnotations();
             f.setAccessible(true);
-            Object fieldValue = f.get(object);
+            Object fieldValue = f.get(obj);
             boolean isAttribute = checkHaveAnnotation(as,XmlElementAttribute.class);
-            BoundField bf  = createBoundField(fieldValue,filedType,isAttribute);
+            BoundField bf  = createBoundField(fieldValue,filedType,f.getName(),isAttribute);
             result.put(f.getName(),bf);
         }
+        return result;
     }
 
 
@@ -54,9 +66,14 @@ public class TypeAdapter {
         return false;
     }
 
-    private  BoundField createBoundField(Object value,Type type,boolean isAttribute)
-    {
-        return new BoundField(value,type,isAttribute)
+    private  BoundField createBoundField(Object value,Type type,String name,boolean isAttribute) throws IllegalAccessException {
+
+        TypeAdapter typeAdapter = null;
+        if (value.getClass().getClassLoader() != null)
+        {
+             typeAdapter  = new TypeAdapter(value);
+        }
+        return new BoundField(value,name,type,isAttribute,typeAdapter)
         {
 
         };

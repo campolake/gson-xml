@@ -2,6 +2,8 @@ package com.google.gsonxml.test;
 
 import com.google.gsonxml.GsonXml;
 
+import java.io.IOException;
+
 /**
  * Created by wangjw on 2016/6/24.
  */
@@ -12,7 +14,7 @@ public class Main {
 
 
 
-    public static void main(String[] args) throws IllegalAccessException {
+    public static void main(String[] args) throws IllegalAccessException, IOException {
         Student s = new Student();
         s.setAge(11);
         s.setName("90");
